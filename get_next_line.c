@@ -6,7 +6,7 @@
 /*   By: madiaz-e <madiaz-e@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 11:37:04 by madiaz-e          #+#    #+#             */
-/*   Updated: 2025/10/24 12:14:13 by madiaz-e         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:16:34 by madiaz-e         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ static char	*fill_line(int fd, char *leftover, char *buffer)
 			break ;
 		if (!leftover)
 			leftover = ft_strdup("");
+		tmp_line = leftover;
 		leftover = ft_strjoin(tmp_line, buffer);
+		free(tmp_line);
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
@@ -40,8 +42,13 @@ static char	*leave_leftover(char *line_b)
 	ssize_t	i;
 
 	i = 0;
-	while (line_b[i] != '\n' && line_b[i] != '0')
+	while (line_b[i] != '\n' && line_b[i] != '\0')
 		i++;
+	if (line_b[i] == 0)
+		return (NULL);
+	left = ft_substr(line_b, i + 1, ft_strlen(line_b) - i);
+	line_b[i + 1] = 0;
+	return (left);
 }
 
 char	*get_next_line(int fd)
@@ -50,14 +57,30 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*buffer;
 
+	if (!fd || BUFFER_SIZE <= 0)
+		return (NULL);
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	//Comprobar si fd es valido, limpiar memoria
 	line = fill_line(fd, leftover, buffer);
 	free(buffer);
 	if (!line)
 		return (NULL);
 	leftover = leave_leftover(line);
 	return (line);
+}
+
+int main(void)
+{
+	int fd = open("texto.txt", O_RDONLY);
+	char *linea;
+
+	while ((linea = get_next_line(fd)) != NULL)
+	{
+		printf("Línea: %s", linea);
+		free(linea);
+	}
+
+	close(fd);
+	return (0);
 }

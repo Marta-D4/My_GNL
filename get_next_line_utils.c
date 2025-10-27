@@ -6,7 +6,7 @@
 /*   By: madiaz-e <madiaz-e@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 14:51:52 by madiaz-e          #+#    #+#             */
-/*   Updated: 2025/10/24 11:13:07 by madiaz-e         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:39:46 by madiaz-e         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ size_t	ft_strlen(const char *s)
 
 	i = 0;
 	if (!s)
-		return (NULL);
+		return (0);
 	while (s[i])
 		i++;
 	return (i);
