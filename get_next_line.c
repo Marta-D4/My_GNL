@@ -6,7 +6,7 @@
 /*   By: madiaz-e <madiaz-e@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 11:37:04 by madiaz-e          #+#    #+#             */
-/*   Updated: 2025/10/28 13:45:05 by madiaz-e         ###   ########.fr       */
+/*   Updated: 2025/10/29 14:46:24 by madiaz-e         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ static char	*fill_line(int fd, char *leftover, char *buffer)
 	while (bytes_r > 0)
 	{
 		bytes_r = read(fd, buffer, BUFFER_SIZE);
-		buffer[bytes_r] = 0;
 		if (bytes_r == -1)
 			return (NULL);
 		else if (bytes_r == 0)
 			break ;
+		buffer[bytes_r] = '\0';
 		if (!leftover)
 			leftover = ft_strdup("");
 		tmp_line = leftover;
@@ -63,7 +63,6 @@ char	*get_next_line(int fd)
 	char		*line;
 	char		*buffer;
 
-	leftover = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
@@ -73,7 +72,11 @@ char	*get_next_line(int fd)
 	free(buffer);
 	buffer = NULL;
 	if (!line)
+	{
+		free(leftover);
+		leftover = NULL;
 		return (NULL);
+	}
 	leftover = leave_leftover(line);
 	return (line);
 }
